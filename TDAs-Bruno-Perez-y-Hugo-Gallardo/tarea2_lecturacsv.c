@@ -174,6 +174,49 @@ void buscar_por_artista()
   }
 
 
+void buscar_por_tempo()
+{
+  printf("Seleccione la categoría de tempo:\n");
+  printf("1. Lentas (menos de 80 BPM)\n");
+  printf("2. Moderadas (entre 80 y 120 BPM)\n");
+  printf("3. Rápidas (más de 120 BPM)\n");
+  int option;
+    printf("Ingrese su opción: ");
+    scanf("%d", &option);
+    char* tempo_category;
+    switch (option) {
+        case 1:
+            tempo_category = "Lenta";
+            break;
+        case 2:
+            tempo_category = "Moderada";
+            break;
+        case 3:
+            tempo_category = "Rápida";
+            break;
+        default:
+            printf("Opción inválida.\n");
+            return;
+    }
+    printf("\nCanciones con tempo %s:\n\n", tempo_category);
+    int found = 0;
+    MapPair* pair = map_first(canciones_bytempo);
+    while (pair != NULL)
+    {
+      if (strcmp((char*)pair->key, tempo_category) == 0)
+      {
+        song_type* song = (song_type*)pair->value;
+        print_song(song);
+        found++;
+      }
+      pair = map_next(canciones_bytempo);
+    }
+    if (found == 0) printf("No se encontraron canciones con tempo %s.\n", tempo_category);
+    else printf("Se encontraron %d canción(es) con tempo %s.\n", found, tempo_category);
+
+
+}
+
 void display_menu()
 {
   int opcion = 0;
@@ -215,7 +258,12 @@ void display_menu()
           break;
         
         case 4:
-            //buscar_por_tempo(lista); 
+            if (canciones_byartista == NULL){
+            printf("Primero debe cargar las canciones\n");
+          }
+          else {
+            buscar_por_tempo();
+          }
           break;
         
         case 5:

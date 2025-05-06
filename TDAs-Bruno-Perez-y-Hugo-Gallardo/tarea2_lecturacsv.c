@@ -186,13 +186,13 @@ void buscar_por_tempo()
     char* tempo_category;
     switch (option) {
         case 1:
-            tempo_category = "Lenta";
+            tempo_category = "Lento";
             break;
         case 2:
-            tempo_category = "Moderada";
+            tempo_category = "Moderado";
             break;
         case 3:
-            tempo_category = "Rápida";
+            tempo_category = "Rápido";
             break;
         default:
             printf("Opción inválida.\n");

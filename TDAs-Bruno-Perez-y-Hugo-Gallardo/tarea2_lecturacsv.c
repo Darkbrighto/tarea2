@@ -1,6 +1,7 @@
 #include "tdas/extra.h"
 #include "tdas/list.h"
 #include "tdas/map.h"
+#include "lab4.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -87,14 +88,50 @@ void Impulse_canciones(const char* filename)
     perror("Error al abrir el archivo");
     return;
   }
+
+  int maximo_a_leer = 0;
+  printf("Ingrese el número máximo de canciones a leer (0 para leer todas): ");
+  scanf("%d", &maximo_a_leer);
+  if (maximo_a_leer < 0){
+    printf("Número inválido. Leyendo todas las canciones.\n");
+    maximo_a_leer = 0;
+  }
   
+  // leer canciones y guardar en un tree map para mayor eficiencia
+  // leer_linea_csv es una función que lee una línea del archivo CSV y devuelve un arreglo de cadenas (campos)
+
   char **campos = leer_linea_csv(archivo, ',');
   int cuenta = 0;
+
+  while ((campos = leer_linea_csv(archivo, ',')) != NULL && (maximo_a_leer == 0 || cuenta < maximo_a_leer))
+  {
+    cuenta++;
+    int id = atoi(campos[0]);
+    char* track_name = campos[4];
+    List* artistas = split_string(campos[2], ";");
+    char* album = campos[3];
+    char* genero = campos[20];
+    float tempo = atof(campos[18]);
+    song_type* cancion = crear_cancion(id, track_name, artistas, album, genero, tempo);
+    printf("%s\n",track_name);
+
+    int* id_ptr = malloc(sizeof(int));
+    *id_ptr = id;
+    map_insert(canciones_byid, id_ptr, cancion);
+    multimap_insert(canciones_bygenero, strdup(genero), cancion);
+    for(char *artista = list_first(artistas); artista != NULL; artista = list_next(artistas))
+      {
+        multimap_insert(canciones_byartista, strdup(artista), cancion);
+      }
+    multimap_insert(canciones_bytempo, strdup(get_tempo_range(tempo)), cancion);
+  }
+
+  /*
   while ((campos = leer_linea_csv(archivo, ',')) != NULL)
     {
       
       cuenta++;
-      if (cuenta == 1000) break;
+      if (cuenta == maximo_a_leer) break;
       int id = atoi(campos[0]);
       char* track_name = campos[4];
       List* artistas = split_string(campos[2], ";");
@@ -115,9 +152,12 @@ void Impulse_canciones(const char* filename)
       multimap_insert(canciones_bytempo, strdup(get_tempo_range(tempo)), cancion);
 
     }
+  */
   fclose(archivo);
   printf("Se cargaron %d canciones\n", cuenta);
 }
+
+
 
 void buscar_por_genero()
 {
@@ -217,6 +257,16 @@ void buscar_por_tempo()
 
 }
 
+crear_lista_reproduccion()
+{
+  char nombre[100];
+  printf("Ingrese el nombre de la lista de reproducción: ");
+  scanf(" %99[^\n]", nombre);
+  List* lista = list_create();
+  list_insert(lista, strdup(nombre));
+  printf("Lista de reproducción '%s' creada.\n", nombre);
+}
+
 void display_menu()
 {
   int opcion = 0;
@@ -267,7 +317,12 @@ void display_menu()
           break;
         
         case 5:
-            //crear_lista_reproduccion(lista);
+          if (canciones_byartista == NULL){
+            printf("Primero debe cargar las canciones\n");
+          }
+          else{ 
+            crear_lista_reproduccion();
+          }
           break;
         
         case 6:

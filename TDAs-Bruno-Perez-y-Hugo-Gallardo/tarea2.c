@@ -123,6 +123,7 @@ void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres) {
     printf("ID: %s, Título: %s, Director: %s, Año: %d\n", peli->id, peli->title,
            peli->director, peli->year);
 
+
     printf("Géneros: ");
     for(char *genre = list_first(peli->genres); genre != NULL; genre = list_next(peli->genres))
       printf("%s, ", genre);

@@ -5,6 +5,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+Comentario del struct song_type:
+  - id: ID de la canción.
+  - nombre: Nombre de la canción.
+  - artistas: Lista de artistas (List*).
+  - album: Nombre del álbum.
+  - genero: Género musical.
+  - tempo: Tempo de la canción (BPM).
+*/
+
 typedef struct{
   int id;
   char* nombre;
@@ -14,10 +24,27 @@ typedef struct{
   float tempo;
 } song_type;
 
+/*
+Comentario del struct playlist_type:
+  - nombre: Nombre de la lista de reproducción.
+  - canciones: Lista de canciones (List*).
+  - Se utiliza para almacenar las listas de reproducción creadas por el usuario.
+  - Las canciones se almacenan en una lista dentro de la estructura.
+  - Se pueden agregar canciones a la lista de reproducción y mostrar las canciones de una lista específica.
+*/
 typedef struct {
   char* nombre;
   List* canciones;
 } playlist_type;
+
+/*
+Commentario del struct SpotifindApp:
+  - canciones_byid: Mapa de canciones por ID (TreeMap*).
+  - canciones_bygenero: Mapa de canciones por género (TreeMap*).
+  - canciones_byartista: Mapa de canciones por artista (TreeMap*).
+  - canciones_bytempo: Mapa de canciones por tempo (TreeMap*).
+  - playlists: Lista de listas de reproducción (List*).
+*/
 
 typedef struct {
   TreeMap* canciones_byid;
@@ -26,6 +53,12 @@ typedef struct {
   TreeMap* canciones_bytempo;
   List* playlists;
 } SpotifindApp;
+
+
+/*  
+  Comentario de la función crear_cancion:
+  - Crea una nueva canción con los parámetros proporcionados.
+*/
 
 song_type* crear_cancion(int id, char* nombre, List* artistas, char* album, char* genero, float tempo)
 {
@@ -39,6 +72,12 @@ song_type* crear_cancion(int id, char* nombre, List* artistas, char* album, char
   return cancion;
 }
 
+/*  
+  Comentario de la función crear_playlist:
+  - Crea una nueva lista de reproducción con el nombre proporcionado.
+  - Inicializa la lista de canciones como una lista vacía.
+*/
+
 playlist_type* crear_playlist(char* nombre)
 {
   playlist_type* playlist = (playlist_type*)malloc(sizeof(playlist_type));
@@ -47,11 +86,25 @@ playlist_type* crear_playlist(char* nombre)
   return playlist;
 }
 
+/*  
+  Comentario de la función compare_strings:
+  - Compara dos cadenas de caracteres (strings) y devuelve 1 si la primera es menor que la segunda.
+  - Se utiliza para ordenar las canciones por nombre, género y artista en el TreeMap.
+*/
+
 int compare_strings(void* key1, void* key2) {
   if(strcmp((char*)key1, (char*)key2) < 0) return 1;
   return 0;
 }
 
+/*  
+  Comentario de la función compare_ids:
+  - Compara dos enteros (IDs) y devuelve 1 si el primero es menor que el segundo.
+  - Se utiliza para ordenar las canciones por ID en el TreeMap.
+  - Se utiliza para buscar canciones por ID en el TreeMap.
+  - Se utiliza para insertar canciones en el TreeMap.
+  - Se utiliza para eliminar canciones del TreeMap.
+*/
 int compare_ids(void* key1, void* key2) {
   int id1 = *((int*)key1);
   int id2 = *((int*)key2);
@@ -59,10 +112,24 @@ int compare_ids(void* key1, void* key2) {
   return 0;
 }
 
+/*  
+  Comentario de la función compare_strings_equal:
+  - Compara dos cadenas de caracteres (strings) y devuelve 1 si son iguales.
+  - Se utiliza para buscar canciones por nombre, género y artista en el TreeMap.
+  - Se utiliza para insertar canciones en el TreeMap.
+  - Se utiliza para eliminar canciones del TreeMap.
+  - Se utiliza para comparar cadenas de caracteres en el TreeMap.
+*/
 int compare_strings_equal(void* key1, void* key2) {
   return strcmp((char*)key1, (char*)key2) == 0;
 }
 
+/*  
+  Comentario de la función get_tempo_range:
+  - Devuelve una cadena que representa el rango de tempo de la canción.
+  - Se utiliza para clasificar las canciones en categorías de tempo (lento, moderado, rápido).
+  - Se utiliza para mostrar el tempo de la canción en la salida.
+*/
 char* get_tempo_range(float tempo)
 {
   if (tempo < 80) return "Lento";
@@ -70,6 +137,13 @@ char* get_tempo_range(float tempo)
   else return "Rápido";
 }
 
+/*  
+  Comentario de la función print_song:
+  - Imprime la información de una canción en la consola.
+  - Muestra el ID, nombre, artistas, álbum, género y tempo de la canción.
+  - Se utiliza para mostrar la información de las canciones en la salida.
+  - Se utiliza para mostrar la información de las canciones en la lista de reproducción.
+*/
 void print_song(song_type* cancion)
 {
   printf("ID: %d\n", cancion->id);
@@ -85,6 +159,15 @@ void print_song(song_type* cancion)
   printf("--------------------------------\n");
 }
 
+/*  
+  Comentario de la función spotifindApp:
+  - Inicializa la aplicación Spotifind.
+  - Crea los mapas de canciones por ID, género, artista y tempo.
+  - Crea la lista de listas de reproducción.
+  - Se utiliza para almacenar la información de las canciones y listas de reproducción.
+  - Se utiliza para inicializar la aplicación Spotifind.
+*/
+
 SpotifindApp* initializeApp() {
   SpotifindApp* app = (SpotifindApp*)malloc(sizeof(SpotifindApp));
   app->canciones_byid = createTreeMap(compare_ids);
@@ -95,6 +178,13 @@ SpotifindApp* initializeApp() {
   return app;
 }
 
+/*  
+  Comentario de la función impulse_canciones:
+  - Carga las canciones desde un archivo CSV.
+  - Lee el archivo y crea canciones a partir de los datos.
+  - Almacena las canciones en los mapas de canciones por ID, género, artista y tempo.
+  - Se utiliza para cargar las canciones en la aplicación Spotifind.
+*/
 void Impulse_canciones(SpotifindApp* app, const char* filename)
 {
   FILE* archivo = fopen(filename, "r");
@@ -169,6 +259,15 @@ void Impulse_canciones(SpotifindApp* app, const char* filename)
   printf("Se cargaron %d canciones\n", cuenta);
 }
 
+/*  
+  Comentario de la función buscar_por_genero:
+  - Busca canciones por género en el mapa de canciones por género.
+  - recibe como parámetro la aplicación Spotifind.
+  - Muestra las canciones encontradas en la consola.
+  - Se utiliza para buscar canciones por género en la aplicación Spotifind.
+  - Se utiliza para mostrar las canciones encontradas en la salida.
+*/
+
 void buscar_por_genero(SpotifindApp* app)
 {
   char genero[100];
@@ -193,6 +292,12 @@ void buscar_por_genero(SpotifindApp* app)
   printf("Se encontraron %d canciones del género '%s'\n", encontradas, genero);
 }
 
+/*  
+  Comentario de la función  buscar_por_artista:
+  - Busca canciones por artista en el mapa de canciones por artista.
+  - recibe como parámetro la aplicación Spotifind.
+  - Muestra las canciones encontradas en la consola.
+*/
 void buscar_por_artista(SpotifindApp* app)
 {
   char artista[100];
@@ -216,7 +321,12 @@ void buscar_por_artista(SpotifindApp* app)
   
   printf("Se encontraron %d canciones del artista '%s'\n", encontradas, artista);
 }
-
+/* 
+  Comentario de la función buscar_por_tempo:
+  - Busca canciones por tempo en el mapa de canciones por tempo.
+  - recibe como parámetro la aplicación Spotifind.
+  - Muestra las canciones encontradas en la consola.
+*/
 void buscar_por_tempo(SpotifindApp* app)
 {
   printf("Seleccione la categoría de tempo:\n");
@@ -261,6 +371,12 @@ void buscar_por_tempo(SpotifindApp* app)
   printf("Se encontraron %d canción(es) con tempo %s.\n", found, tempo_category);
 }
 
+/*  
+  Comentario de la función crear_lista_reproduccion:
+  - Crea una nueva lista de reproducción.
+  - recibe como parámetro la aplicación Spotifind.
+  - Muestra un mensaje de éxito o error en la consola.
+*/
 void crear_lista_reproduccion(SpotifindApp* app)
 {
   char nombre[100];
@@ -279,6 +395,12 @@ void crear_lista_reproduccion(SpotifindApp* app)
   printf("Lista de reproducción '%s' creada.\n", nombre);
 }
 
+/*  
+  Comentario de la función agregar_cancion_a_lista:
+  - Agrega una canción a una lista de reproducción existente.
+  - recibe como parámetro la aplicación Spotifind.
+  - Muestra un mensaje de éxito o error en la consola.
+*/
 void agregar_cancion_a_lista(SpotifindApp* app)
 {
   if (list_size(app->playlists) == 0) {
@@ -322,6 +444,12 @@ void agregar_cancion_a_lista(SpotifindApp* app)
   printf("Canción '%s' agregada a la lista '%s'.\n", cancion->nombre, playlist_seleccionada->nombre);
 }
 
+/*  
+  Comentario de la función mostrar_canciones_de_lista:
+  - Muestra las canciones de una lista de reproducción específica.
+  - recibe como parámetro la aplicación Spotifind.
+  - Muestra un mensaje de éxito o error en la consola.
+*/
 void mostrar_canciones_de_lista(SpotifindApp* app)
 {
   if (list_size(app->playlists) == 0) {
@@ -367,6 +495,14 @@ void mostrar_canciones_de_lista(SpotifindApp* app)
   printf("Total: %d canciones.\n", count);
 }
 
+/*  
+  Comentario de la función display_menu:
+  - Muestra el menú principal de la aplicación Spotifind.
+  - Permite al usuario seleccionar diferentes opciones para interactuar con la aplicación.
+  - Recibe como parámetro la aplicación Spotifind.
+  - Se utiliza para mostrar el menú principal de la aplicación.
+  - Se utiliza para permitir al usuario seleccionar diferentes opciones.
+*/
 void display_menu(SpotifindApp* app)
 {
   int opcion = 0;

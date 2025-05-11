@@ -94,8 +94,13 @@ List *split_string(const char *str, const char *delim) {
 }
 
 // Función para limpiar la pantalla
-void limpiarPantalla() { system("clear"); }
-
+void limpiarPantalla() {
+    #ifdef _WIN32
+        system("cls");  // Para Windows
+    #else
+        system("clear"); // Para Linux/Unix/macOS
+    #endif
+  }
 void presioneTeclaParaContinuar() {
   puts("Presione una tecla para continuar...");
   getchar(); // Consume el '\n' del buffer de entrada

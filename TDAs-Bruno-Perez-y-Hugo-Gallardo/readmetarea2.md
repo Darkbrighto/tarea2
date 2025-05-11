@@ -30,7 +30,7 @@ Este sistema puede ejecutarse fácilmente utilizando **Visual Studio Code** junt
    * Ejecuta el siguiente comando para compilar el programa:
 
      ```bash
-     gcc -o tarea2_lecturacsv tdas/*.c
+     gcc tarea2_lecturacsv.c tdas/*c
      ```
 
 4. **Ejecuta el programa**
@@ -38,8 +38,8 @@ Este sistema puede ejecutarse fácilmente utilizando **Visual Studio Code** junt
    * Asegúrate de que el archivo `song_dataset_.csv` esté en la misma carpeta.
    * Ejecuta el programa con:
 
-     ```bash
-     ./tarea2_lecturacsv
+     ``
+     ./a.exe
      ```
 
 ## Funcionalidades

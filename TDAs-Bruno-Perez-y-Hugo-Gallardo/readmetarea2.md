@@ -21,12 +21,13 @@ Este sistema puede ejecutarse fácilmente utilizando **Visual Studio Code** junt
 2. **Abre el proyecto en Visual Studio Code**
 
    * Abre VS Code.
-   * Selecciona `Archivo > Abrir carpeta...` y elige la carpeta del proyecto.
+   * Selecciona `Archivo > Abrir carpeta...` y elige la carpeta del proyecto. (TDAs-Br...)
 
 3. **Compila el código**
 
    * Abre el archivo `tarea2_lecturacsv.c`.
    * Abre la terminal integrada (`Terminal > Nueva terminal`).
+   * Abre la carpeta TDAs-Bruno-Perez-y-Hugo-Gallardo en el Terminal
    * Ejecuta el siguiente comando para compilar el programa:
 
      ```bash
